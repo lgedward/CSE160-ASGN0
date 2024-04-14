@@ -16,8 +16,8 @@ function handleDrawEvent() {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    drawVector(Vector3([+document.getElementById('x1').value, +document.getElementById('y1').value, 0]), 'red');
-    drawVector(Vector3([+document.getElementById('x2').value, +document.getElementById('y2').value, 0]), 'blue');
+    drawVector(new Vector3([+document.getElementById('x1').value, +document.getElementById('y1').value, 0]), 'red');
+    drawVector(new Vector3([+document.getElementById('x2').value, +document.getElementById('y2').value, 0]), 'blue');
 }
 
 function angleBetween(v1, v2) {
@@ -51,26 +51,26 @@ function handleDrawOperationEvent() {
 
     switch (operation) {
         case 'add':
-            drawVector(Vector3(v1.elements).add(v2), 'green');
+            drawVector(new Vector3(v1.elements).add(v2), 'green');
             break;
         case 'sub':
-            drawVector(Vector3(v1.elements).sub(v2), 'green');
+            drawVector(new Vector3(v1.elements).sub(v2), 'green');
             break;
         case 'div':
-            drawVector(Vector3(v1.elements).div(scalar), 'green');
-            drawVector(Vector3(v2.elements).div(scalar), 'green');
+            drawVector(new Vector3(v1.elements).div(scalar), 'green');
+            drawVector(new Vector3(v2.elements).div(scalar), 'green');
             break;
         case 'mul':
-            drawVector(Vector3(v1.elements).mul(scalar), 'green');
-            drawVector(Vector3(v2.elements).mul(scalar), 'green');
+            drawVector(new Vector3(v1.elements).mul(scalar), 'green');
+            drawVector(new Vector3(v2.elements).mul(scalar), 'green');
             break;
         case 'magnitude':
             console.log('Magnitude(v1): ', v1.magnitude());
             console.log('Magnitude(v2): ', v2.magnitude());
             break;
         case 'normalize':
-            drawVector(Vector3(v1.elements).normalize(), 'green');
-            drawVector(Vector3(v2.elements).normalize(), 'green');
+            drawVector(new Vector3(v1.elements).normalize(), 'green');
+            drawVector(new Vector3(v2.elements).normalize(), 'green');
             break;
         case 'angleBetween':
             var angle = angleBetween(v1, v2);
