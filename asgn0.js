@@ -10,111 +10,78 @@ function drawVector(v, color) {
 }
 
 function handleDrawEvent() {
-    var canvas = document.getElementById('example');
-    var ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var ctx = document.getElementById('example').getContext('2d');
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    var x = document.getElementById('xInput').value;
-    var y = document.getElementById('yInput').value;
-    var v1 = new Vector3([parseFloat(x), parseFloat(y), 0]);
-
-    var x2 = document.getElementById('xInput2').value;
-    var y2 = document.getElementById('yInput2').value;
-    var v2 = new Vector3([parseFloat(x2), parseFloat(y2), 0]);
-    
-    drawVector(v1, 'red');
-
-    drawVector(v2, 'blue');
+    drawVector(Vector3([+document.getElementById('x1').value, +document.getElementById('y1').value, 0]), 'red');
+    drawVector(Vector3([+document.getElementById('x2').value, +document.getElementById('y2').value, 0]), 'blue');
 }
 
 function angleBetween(v1, v2) {
-    var dotProd = Vector3.dot(v1, v2);
-    var magnitudeV1 = v1.magnitude();
-    var magnitudeV2 = v2.magnitude();
-    // Avoid division by zero and rounding errors causing acos to return NaN
-    var cosineOfAngle = dotProd / (magnitudeV1 * magnitudeV2);
-    cosineOfAngle = Math.max(-1, Math.min(1, cosineOfAngle)); // Clamp value to the range [-1, 1]
-    return Math.acos(cosineOfAngle) * (180 / Math.PI); // Convert to degrees
+    // Logic on angleBetween function recommended by ChatGPT (Lines 25-27)
+    var angleCos = Vector3.dot(v1, v2) / (v1.magnitude() * v2.magnitude());
+    angleCos = Math.max(-1, Math.min(1, angleCos));
+    return Math.acos(angleCos) * (180 / Math.PI);
 }
 
 function areaTriangle(v1, v2) {
-    var crossProduct = Vector3.cross(v1, v2);
-    return crossProduct.magnitude() / 2;
+    // Logic on areaTriangle function recommended by ChatGPT (Lines 32-33)
+    var cp = Vector3.cross(v1, v2);
+    return cp.magnitude() / 2;
 }
 
-
 function handleDrawOperationEvent() {
-    var canvas = document.getElementById('example');
-    var ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var ctx = document.getElementById('example').getContext('2d');
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    // Create and draw v1
-    var x1 = parseFloat(document.getElementById('xInput').value);
-    var y1 = parseFloat(document.getElementById('yInput').value);
-    var v1 = new Vector3([x1, y1, 0]);
+    var v1 = new Vector3([+document.getElementById('x1').value, +document.getElementById('y1').value, 0]);
+    var v2 = new Vector3([+document.getElementById('x2').value, +document.getElementById('y2').value, 0]);
+
     drawVector(v1, 'red');
-
-    // Create and draw v2
-    var x2 = parseFloat(document.getElementById('xInput2').value);
-    var y2 = parseFloat(document.getElementById('yInput2').value);
-    var v2 = new Vector3([x2, y2, 0]);
     drawVector(v2, 'blue');
 
-    // Get operation and scalar
-    var operation = document.getElementById('operationSelector').value;
-    var scalar = parseFloat(document.getElementById('scalarInput').value);
+    var operation = document.getElementById('Operation').value;
+    var scalar = +document.getElementById('Scalar').value;
 
-    // Perform operation and draw the result
-    var v3, v4;
     switch (operation) {
         case 'add':
-            v3 = new Vector3(v1.elements).add(v2);
-            drawVector(v3, 'green');
+            drawVector(Vector3(v1.elements).add(v2), 'green');
             break;
         case 'sub':
-            v3 = new Vector3(v1.elements).sub(v2);
-            drawVector(v3, 'green');
+            drawVector(Vector3(v1.elements).sub(v2), 'green');
             break;
         case 'div':
-            v3 = new Vector3(v1.elements).div(scalar);
-            v4 = new Vector3(v2.elements).div(scalar);
-            drawVector(v3, 'green');
-            drawVector(v4, 'green');
+            drawVector(Vector3(v1.elements).div(scalar), 'green');
+            drawVector(Vector3(v2.elements).div(scalar), 'green');
             break;
         case 'mul':
-            v3 = new Vector3(v1.elements).mul(scalar);
-            v4 = new Vector3(v2.elements).mul(scalar);
-            drawVector(v3, 'green');
-            drawVector(v4, 'green');
+            drawVector(Vector3(v1.elements).mul(scalar), 'green');
+            drawVector(Vector3(v2.elements).mul(scalar), 'green');
             break;
         case 'magnitude':
-            console.log('Magnitude of v1:', v1.magnitude());
-            console.log('Magnitude of v2:', v2.magnitude());
+            console.log('Magnitude(v1): ', v1.magnitude());
+            console.log('Magnitude(v2): ', v2.magnitude());
             break;
-
         case 'normalize':
-            var normV1 = new Vector3(v1.elements).normalize();
-            var normV2 = new Vector3(v2.elements).normalize();
-            drawVector(normV1, 'green');
-            drawVector(normV2, 'green');
+            drawVector(Vector3(v1.elements).normalize(), 'green');
+            drawVector(Vector3(v2.elements).normalize(), 'green');
             break;
         case 'angleBetween':
             var angle = angleBetween(v1, v2);
-            console.log('Angle between v1 and v2:', angle);
+            console.log("Angle: ", angle);
             break;
         case 'area':
             var area = areaTriangle(v1, v2);
-            console.log('Area of the triangle formed by v1 and v2:', area);
+            console.log("Area: ", area);
             break;
     }
 }
-
 
 function main() {
     // Retrieve <canvas> element <- (1)
